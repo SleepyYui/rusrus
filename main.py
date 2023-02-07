@@ -1,8 +1,6 @@
 import sys
 sys.set_int_max_str_digits(2147483647)
 
-
-
 def fib(n):
     if n <= 2:
         return 1
