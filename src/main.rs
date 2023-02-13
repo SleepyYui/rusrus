@@ -1,7 +1,3 @@
-extern crate num;
-use num::{BigUint, One, Zero};
-//use std::ops::Mul;
-
 // 3x+1 function
 // return the count and the highest number
 fn three_x_plus_one (mut n: u128) -> (u128, u128) {
