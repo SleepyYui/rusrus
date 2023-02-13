@@ -6,7 +6,7 @@ use num::{BigUint, One, Zero};
 // return the count and the highest number
 fn three_x_plus_one (mut n: u128) -> (u128, u128) {
     let mut count = 0;
-    let mut highest = 0;
+    let mut highest = n;
     while n != 1 {
         println!("{}", n);
         if n % 2 == 0 {
