@@ -1,38 +1,45 @@
-// 3x+1 function
-// return the count and the highest number
-fn three_x_plus_one (mut n: u128) -> (u128, u128) {
-    let mut count = 0;
-    let mut highest = n;
-    while n != 1 {
-        println!("{}", n);
-        if n % 2 == 0 {
-            n = n / 2;
-        } else {
-            n = 3 * n + 1;
-        }
-        count += 1;
-        if n > highest {
-            highest = n;
-        }
+use num::{BigUint, One};
+
+fn fib(n: u64, memo: &mut Vec<Option<BigUint>>) -> BigUint {
+    // if n in memo, return memo[n]
+    if let Some(x) = memo[n as usize] {
+        return x;
     }
-    (count, highest)
+    // if n <= 2, return 1
+    if n <= 2 {
+        return BigUint::one();
+    }
+    // if n is even
+    if n % 2 == 0 {
+        // m = n // 2
+        const m: u128 = n / 2;
+        // fib_m = fib(m, memo)
+        const fib_m: u128 = fib(m, memo);
+        // result = fib_m * (fib_m + 2 * fib(m-1, memo))
+        const result: u128 = fib_m * (fib_m + fib(m - 1, memo) * BigUint::from(2u8));
+        // memo[n] = result
+        memo[n as usize] = Some(result.clone());
+        // return result
+        result
+    }
+    // if n is odd
+    else {
+        // m = (n + 1) // 2
+        const m: u128 = (n + 1) / 2;
+        // fib_m = fib(m, memo)
+        const fib_m: u128 = fib(m, memo);
+        // fib_m1 = fib(m-1, memo)
+        const fib_m1: u128 = fib(m - 1, memo);
+        // result = fib_m * fib_m + fib_m1 * fib_m1
+        const result: u128 = fib_m * fib_m + fib_m1 * fib_m1;
+        // memo[n] = result
+        memo[n as usize] = Some(result.clone());
+        // return result
+        result
+    }
 }
 
-fn do_3xp1() {
-    let input_message = "Enter a number: ";
-    let mut input = String::new();
-    println!("{}", input_message);
-    std::io::stdin().read_line(&mut input).expect("Failed to read line");
-    // start timer
-    let start = std::time::Instant::now();
-    // run the 3x+1 function with the input and print how long it took to reach 1 and what the highest number was
-    let (count, highest) = three_x_plus_one(input.trim().parse().expect("Please type a number!"));
-    // end timer
-    let end = std::time::Instant::now();
-    println!("It took {} steps to reach 1 and the highest number was {}", count, highest);
-    println!("It took {} microseconds to run.", end.duration_since(start).as_micros());
-}
 
 fn main() {
-    do_3xp1();
+    fib(1_000_000_000, &mut vec![None; 1_000_000_000 + 1]);
 }
