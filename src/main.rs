@@ -1,45 +1,48 @@
-use num::{BigUint, One};
+use num::{BigUint, One, Zero};
+//use num::ToPrimitive;
 
-fn fib(n: u64, memo: &mut Vec<Option<BigUint>>) -> BigUint {
-    // if n in memo, return memo[n]
-    if let Some(x) = memo[n as usize] {
-        return x;
+fn fib_matrix(n: usize) -> BigUint {
+    let mut f = vec![vec![BigUint::one(), BigUint::one()],
+                     vec![BigUint::one(), BigUint::zero()]];
+    let mut res = vec![vec![BigUint::one(), BigUint::zero()],
+                       vec![BigUint::zero(), BigUint::zero()]];
+
+    let mut n = n;
+    while n > 0 {
+        println!("{} iterations remaining.", n);
+        if n & 1 == 1 {
+            res = mat_mul(&res, &f);
+        }
+        f = mat_mul(&f, &f);
+        n >>= 1;
     }
-    // if n <= 2, return 1
-    if n <= 2 {
-        return BigUint::one();
-    }
-    // if n is even
-    if n % 2 == 0 {
-        // m = n // 2
-        const m: u128 = n / 2;
-        // fib_m = fib(m, memo)
-        const fib_m: u128 = fib(m, memo);
-        // result = fib_m * (fib_m + 2 * fib(m-1, memo))
-        const result: u128 = fib_m * (fib_m + fib(m - 1, memo) * BigUint::from(2u8));
-        // memo[n] = result
-        memo[n as usize] = Some(result.clone());
-        // return result
-        result
-    }
-    // if n is odd
-    else {
-        // m = (n + 1) // 2
-        const m: u128 = (n + 1) / 2;
-        // fib_m = fib(m, memo)
-        const fib_m: u128 = fib(m, memo);
-        // fib_m1 = fib(m-1, memo)
-        const fib_m1: u128 = fib(m - 1, memo);
-        // result = fib_m * fib_m + fib_m1 * fib_m1
-        const result: u128 = fib_m * fib_m + fib_m1 * fib_m1;
-        // memo[n] = result
-        memo[n as usize] = Some(result.clone());
-        // return result
-        result
-    }
+    res[0][1].clone()
 }
 
+fn mat_mul(a: &Vec<Vec<BigUint>>, b: &Vec<Vec<BigUint>>) -> Vec<Vec<BigUint>> {
+    let mut res = vec![vec![BigUint::zero(), BigUint::zero()],
+                       vec![BigUint::zero(), BigUint::zero()]];
+    for i in 0..2 {
+        for j in 0..2 {
+            for k in 0..2 {
+                println!("{} {} {}", i, j, k);
+                res[i][j] += &a[i][k] * &b[k][j];
+                //println!("calculated successfully.");
+            }
+        }
+    }
+    res
+}
 
 fn main() {
-    fib(1_000_000_000, &mut vec![None; 1_000_000_000 + 1]);
+    let n = 10_000_000;
+    // get n from the user
+    /*let input_message = "Enter a number: ";
+    let mut input = String::new();
+    println!("{}", input_message);
+    std::io::stdin().read_line(&mut input).expect("Failed to read line");
+    let n = input.trim().parse().expect("Please type a number!");*/
+    let result = fib_matrix(n);
+    println!("The {}th Fibonacci number is: ", n);
+    println!("{}", result.to_str_radix(10));
 }
