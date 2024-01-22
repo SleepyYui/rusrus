@@ -4,7 +4,7 @@ use num::{BigUint, One, Zero};
 
 // 3x+1 function
 // return the count and the highest number
-fn three_x_plus_one (mut n: u128) -> (u128, u128) {
+pub(crate) fn three_x_plus_one (mut n: u128) -> (u128, u128) {
     let mut count = 0;
     let mut highest = 0;
     while n != 1 {

@@ -1,7 +1,7 @@
 use num::{BigUint, One, Zero};
 //use num::ToPrimitive;
 
-fn fib_matrix(n: usize) -> BigUint {
+pub(crate) fn fib_matrix(n: usize) -> BigUint {
     let mut f = vec![vec![BigUint::one(), BigUint::one()],
                      vec![BigUint::one(), BigUint::zero()]];
     let mut res = vec![vec![BigUint::one(), BigUint::zero()],
@@ -9,7 +9,7 @@ fn fib_matrix(n: usize) -> BigUint {
 
     let mut n = n;
     while n > 0 {
-        println!("{} iterations remaining.", n);
+        //println!("{} iterations remaining.", n);
         if n & 1 == 1 {
             res = mat_mul(&res, &f);
         }
@@ -25,7 +25,7 @@ fn mat_mul(a: &Vec<Vec<BigUint>>, b: &Vec<Vec<BigUint>>) -> Vec<Vec<BigUint>> {
     for i in 0..2 {
         for j in 0..2 {
             for k in 0..2 {
-                println!("{} {} {}", i, j, k);
+                //println!("{} {} {}", i, j, k);
                 res[i][j] += &a[i][k] * &b[k][j];
                 //println!("calculated successfully.");
             }
